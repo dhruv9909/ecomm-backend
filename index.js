@@ -9,6 +9,7 @@ const userRouter = require("./routes/users");
 const productRouter = require("./routes/products");
 const staticRouter = require("./routes/staticRouter");
 const checkoutRouter = require("./routes/checkout");
+const orderRouter = require("./routes/orders");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -23,6 +24,7 @@ app.use('/users', userRouter);
 app.use('/products', handleRestrictToLogin, productRouter);
 app.use('/allproducts', staticRouter);
 app.use('/checkout', checkoutRouter);
+app.use('/orders', orderRouter);
 
 const mongoUri = process.env.MONGO_URI;
 if (!mongoUri) {
