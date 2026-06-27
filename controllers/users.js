@@ -79,8 +79,12 @@ async function handleUpdateUserCartSingleProduct(req, res) {
     const _id = req.params.id;
     const productId = req.params.productId;
     const { title, qnty } = req.body;
+    
+    // Parse to number if it is numeric to match the database ID type
+    const parsedProductId = !isNaN(productId) && productId.trim() !== '' ? Number(productId) : productId;
+
     console.log('req-params', _id, qnty);
-    console.log('req-body', productId);
+    console.log('req-body', parsedProductId);
     const entry = await User.findOneAndUpdate({ _id },
         {
             $set: {
@@ -88,7 +92,7 @@ async function handleUpdateUserCartSingleProduct(req, res) {
             },
         },
         {
-            arrayFilters: [{ "element._id": productId }],
+            arrayFilters: [{ "element._id": parsedProductId }],
             new: true,
         }
     )
@@ -106,10 +110,14 @@ async function handleUpdateUserCartSingleProduct(req, res) {
 async function handleDeleteProduct(req, res) {
     const _id = req.params.id;
     const productId = req.params.productId;
+    
+    // Parse to number if it is numeric to match the database ID type
+    const parsedProductId = !isNaN(productId) && productId.trim() !== '' ? Number(productId) : productId;
+
     const entry = await User.findOneAndUpdate({ _id },
         {
             $pull: {
-                cart: { _id: productId }
+                cart: { _id: parsedProductId }
             }
         },
         { new: true, }

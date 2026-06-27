@@ -1,7 +1,7 @@
 const cors = require("cors");
 
 var corsOptions = {
-    origin: "http://localhost:5173", // Replace with your frontend URL
+    origin: process.env.CORS_ORIGIN || "http://localhost:5173", // Replace with your frontend URL
     credentials: true
 };
 
