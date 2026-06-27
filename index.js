@@ -7,7 +7,8 @@ const { connectMongodb } = require("./connect");
 const { handleRestrictToLogin } = require("./middlewares/auth");
 const userRouter = require("./routes/users");
 const productRouter = require("./routes/products");
-const staticRouter = require("./routes/staticRouter")
+const staticRouter = require("./routes/staticRouter");
+const checkoutRouter = require("./routes/checkout");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -21,6 +22,7 @@ app.use(express.static('public'));
 app.use('/users', userRouter);
 app.use('/products', handleRestrictToLogin, productRouter);
 app.use('/allproducts', staticRouter);
+app.use('/checkout', checkoutRouter);
 
 const mongoUri = process.env.MONGO_URI;
 if (!mongoUri) {
