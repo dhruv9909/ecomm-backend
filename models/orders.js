@@ -16,7 +16,9 @@ const orderSchema = new mongoose.Schema({
         title: { type: String, required: true },
         price: { type: Number, required: true },
         qnty: { type: Number, required: true },
-        image: { type: String }
+        image: { type: String },
+        owner: { type: mongoose.Schema.Types.ObjectId, ref: "users" },
+        deliveryStatus: { type: String, default: "Pending" }
     }],
     totalAmount: {
         type: Number,
