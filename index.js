@@ -32,8 +32,29 @@ if (!mongoUri) {
     process.exit(1);
 }
 
+const mongoose = require("mongoose");
+
 connectMongodb(mongoUri)
-.then(()=>{console.log('mongoDB connected!')})
+.then(async ()=>{
+    console.log('mongoDB connected!');
+    try {
+        const db = mongoose.connection.db;
+        const collections = await db.listCollections({ name: 'orders' }).toArray();
+        if (collections.length > 0) {
+            const indexes = await db.collection('orders').indexes();
+            if (indexes.some(idx => idx.name === 'id_1')) {
+                await db.collection('orders').dropIndex('id_1');
+                console.log("Successfully dropped duplicate unique index 'id_1' on orders collection.");
+            }
+            if (indexes.some(idx => idx.name === 'stripeSessionId_1')) {
+                await db.collection('orders').dropIndex('stripeSessionId_1');
+                console.log("Successfully dropped duplicate unique index 'stripeSessionId_1' on orders collection.");
+            }
+        }
+    } catch (err) {
+        console.error("Error trying to check/drop indexes on orders collection:", err.message);
+    }
+})
 .catch((err) => {
     console.error('Failed to connect to MongoDB:', err.message);
     console.error('Please verify your connection string in the .env file and ensure MongoDB is running/accessible.');
